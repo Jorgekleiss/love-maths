@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function() {
     for(let button of buttons) {
         button.addEventListener("click", function() {
             if (this.getAttribute("data-type") === "submit") {
-                alert("You clicked Submit!");
+                checkAnswer();
             } else {
                 let gameType = this.getAttribute("data-type");
                 runGame(gameType);
@@ -36,21 +36,52 @@ function runGame(gameType) {
 
     }
 }
-
+/** this will check the users answer agains the correct andswer and
+ * go fromthere. 
+ */
 function checkAnswer() {
+    let userAnswer = parseInt(document.getElementById('answer-box').value);
+    let calculatedAnswer = calculateCorrectAnswer();
+    let isCorrect = userAnswer === calculatedAnswer[0];
 
+    if (isCorrect){
+        alert('Well Done, you got that Right!')
+        incrementScore();
+    } else {
+        alert(`Oh No, thats not quiet right, the correct andwer was ${calculatedAnswer[0]}!`);
+        incrementWrongAnswer();
+    }
+
+    runGame(calculatedAnswer[1]);
 }
 
+
+/**Gets the Operands (Numbers) and the Operator(+ - * /)
+ * directly from the DOM and returns the correct answer
+ */
 function calculateCorrectAnswer() {
+    let operand1 = parseInt(document.getElementById('operand1').innerText);
+    let operand2 = parseInt(document.getElementById('operand2').innerText);
+    let operator = document.getElementById('operator').innerText;
 
+    if (operator === "+"){
+        return [operand1 + operand2, "addition"]
+    } else {
+        alert(`Unimplemented operator ${operator}`);
+        throw `unimplemented operator ${operator}. Aborting`
+    }
 }
 
+/** this fuction adds the score when answers are correct.  */
 function incrementScore() {
-
+    let oldScore = parseInt(document.getElementById('score').innerText);
+    document.getElementById('score').innerText = ++oldScore
 }
 
+/** this fuction adds the score when answers are incorrect.  */
 function incrementWrongAnswer() {
-
+    let oldIncorrectScore = parseInt(document.getElementById('incorrect').innerText);
+    document.getElementById('incorrect').innerText = ++oldIncorrectScore
 }
 
 function displayAdditionQuestion(operand1, operand2) {
